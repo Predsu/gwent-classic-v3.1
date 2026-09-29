@@ -9590,3 +9590,61 @@ card_dict = Object.assign({}, card_dict, ext_to_cards);
 card_dict = Object.assign({}, card_dict, ext_lr_cards);
 card_dict = Object.assign({}, card_dict, ext_sy_cards);
 card_dict = Object.assign({}, card_dict, ext_ze_cards);
+
+var polishCardName = function (name) {
+    var translations = {
+        "Decoy": "Sobowtór",
+        "Biting Frost": "Mrożący mróz",
+        "Clear Weather": "Bezchmurne niebo",
+        "Commander's Horn": "Róg dowódcy",
+        "Impenetrable Fog": "Nieprzenikniona mgła",
+        "Scorch": "Spopielenie",
+        "Torrential Rain": "Ulewny deszcz",
+        "Skellige Storm": "Sztorm Skellige",
+        "Poor Fucking Infantry": "Przeklęta piechota",
+        "Blue Stripes Commando": "Komando Niebieskich Pasów",
+        "Crinfrid Reavers Dragon Hunter": "Łowca smoków z Crinfrid",
+        "Dun Banner Medic": "Medyk z Dun Banner",
+        "Kaedweni Siege Expert": "Kaedweński specjalista oblężniczy",
+        "Redanian Foot Soldier": "Redański piechur",
+        "Impera Brigade Guard": "Gwardzista Brygady Impera",
+        "Etolian Auxiliary Archers": "Etolscy łucznicy pomocniczy",
+        "Heavy Zerrikanian Fire Scorpion": "Ciężki zerrikański skorpion ogniowy",
+        "Bovine Defense Force": "Krowia siła obronna",
+        "Siege Tower": "Wieża oblężnicza",
+        "Trebuchet": "Trebusz",
+        "Ballista": "Balista",
+        "Catapult": "Katapulta"
+    };
+    if (translations[name]) return translations[name];
+    return name.replace(" - King of Temeria", " - król Temerii")
+        .replace(" - Lord Commander of the North", " - dowódca wojsk Północy")
+        .replace(" - The Siegemaster", " - mistrz oblężenia")
+        .replace(" - The Steel-Forged", " - wykuty ze stali")
+        .replace(" - Son of Medell", " - syn Medella")
+        .replace(" - Emperor of Nilfgaard", " - cesarz Nilfgaardu")
+        .replace(" - the White Flame", " - Biały Płomień")
+        .replace(" - The Relentless", " - Bezlitosny")
+        .replace(" - Invader of the North", " - najeźdźca Północy")
+        .replace(" of Rivia", " z Rivii")
+        .replace(" of Vengerberg", " z Vengerbergu")
+        .replace(" of Everec", " von Everec")
+        .replace(" of Denesle", " z Denesle");
+};
+
+var polishCardQuote = function () {
+    return "Opis z uniwersum Wiedźmina.";
+};
+
+var polishDeckTitle = function (title) {
+    return title.replace("Default Northern Realms", "Domyślna talia Królestw Północy")
+        .replace("Default Nilfgaard", "Domyślna talia Nilfgaardu")
+        .replace("Default Monster", "Domyślna talia Potworów")
+        .replace("Default Scoia'Tael", "Domyślna talia Scoia'tael")
+        .replace("Default Skellige", "Domyślna talia Skellige")
+        .replace("Default Witcher Universe", "Domyślna talia Uniwersum Wiedźmina")
+        .replace("Default Toussaint", "Domyślna talia Toussaint")
+        .replace("Default Lyria & Rivia", "Domyślna talia Lyr i Rivii")
+        .replace("Default Syndicate", "Domyślna talia Syndykatu")
+        .replace("Default Zerrikania", "Domyślna talia Zerrikanii");
+};

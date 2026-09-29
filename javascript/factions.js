@@ -2,7 +2,7 @@
 
 var factions = {
 	realms: {
-		name: "Northern Realms",
+		name: "Królestwa Północy",
 		factionAbility: player => game.roundStart.push(async () => {
 			if (game.roundCount > 1 && game.roundHistory[game.roundCount - 2].winner === player) {
 				player.deck.draw(player.hand);
@@ -12,16 +12,16 @@ var factions = {
 		}),
 		activeAbility: false,
 		abilityUses: 0,
-		description: "Draw a card from your deck whenever you win a round."
+		description: "Dobierz kartę z talii za każdym razem, gdy wygrasz rundę."
 	},
 	nilfgaard: {
-		name: "Nilfgaardian Empire",
-		description: "Wins any round that ends in a draw.",
+		name: "Cesarstwo Nilfgaardu",
+		description: "Wygrywa każdą rundę zakończoną remisem.",
 		activeAbility: false,
 		abilityUses: 0
 	},
 	monsters: {
-		name: "Monsters",
+		name: "Potwory",
 		factionAbility: player => game.roundEnd.push( () => {
 			let units = board.row.filter( (r,i) => player === player_me ^ i < 3)
 				.reduce((a,r) => r.cards.filter(c => c.isUnit()).concat(a), []);
@@ -36,7 +36,7 @@ var factions = {
 			});
 			return false;
 		}),
-		description: "Keeps a random Unit Card out after each round.",
+		description: "Po każdej rundzie pozostawia na polu losową kartę jednostki.",
 		activeAbility: false,
 		abilityUses: 0
 	},
@@ -59,7 +59,7 @@ var factions = {
 			await ui.notification(notif, 1200);
 			return true;
 		}),
-		description: "Decides who takes first turn.",
+		description: "Pozwala zdecydować, kto wykona pierwszy ruch.",
 		activeAbility: false,
 		abilityUses: 0
 	},
@@ -71,12 +71,12 @@ var factions = {
 			await Promise.all(player.grave.findCardsRandom(c => c.isUnit(), 2).map(c => board.toRow(c, player.grave)));
 			return true;
 		}),
-		description: "2 random cards from the graveyard are placed on the battlefield at the start of the third round.",
+		description: "Na początku trzeciej rundy na polu bitwy umieszczane są 2 losowe karty ze stosu kart odrzuconych.",
 		activeAbility: false,
 		abilityUses: 0
 	},
 	witcher_universe: {
-		name: "Witcher Universe",
+		name: "Uniwersum Wiedźmina",
 		factionAbility: async player => {
 			await ui.notification("witcher_universe", 1200);
 		},
@@ -84,7 +84,7 @@ var factions = {
 			player.updateFactionAbilityUses(1);
 			return false;
 		}),
-		description: "Can skip a turn once every round.",
+		description: "Raz na rundę może pominąć turę.",
 		activeAbility: true,
 		abilityUses: 1,
 		weight: (player) => {
@@ -102,7 +102,7 @@ var factions = {
 		}),
 		activeAbility: false,
 		abilityUses: 0,
-		description: "Draw a card from your deck whenever you lose a round."
+		description: "Dobierz kartę z talii za każdym razem, gdy przegrasz rundę."
 	},
 	lyria_rivia: {
 		name: "Lyria & Rivia",
@@ -117,7 +117,7 @@ var factions = {
 		},
 		activeAbility: true,
 		abilityUses: 1,
-		description: "Apply a Morale Boost effect in the selected row (boost all units by 1 in this turn).",
+		description: "Zastosuj efekt Premii do morale w wybranym rzędzie (zwiększ siłę wszystkich jednostek o 1 w tej turze).",
 		weight: (player) => {
 			let units = player.getAllRowCards().concat(player.hand.cards).filter(c => c.isUnit()).filter(c => !c.abilities.includes("spy"));
 			let rowStats = {
@@ -134,14 +134,14 @@ var factions = {
 		}
 	},
 	syndicate: {
-		name: "Syndicate",
+		name: "Syndykat",
 		factionAbility: player => game.gameStart.push(async () => {
 			let card = new Card("sy_sigi_reuven", card_dict["sy_sigi_reuven"], player);
 			await board.addCardToRow(card, card.row, card.holder);
 		}),
 		activeAbility: false,
 		abilityUses: 0,
-		description: "Starts the game with the Hero card Sigi Reuven on the board."
+		description: "Rozpoczyna grę z bohaterem Sigim Reuvenem na polu bitwy."
 	},
 	zerrikania: {
 		name: "Zerrikania",

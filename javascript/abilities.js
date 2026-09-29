@@ -2,41 +2,41 @@
 
 var ability_dict = {
 	clear: {
-		name: "Clear Weather",
-		description: "Removes all Weather Cards (Biting Frost, Impenetrable Fog and Torrential Rain) effects. "
+		name: "Bezchmurne niebo",
+		description: "Usuwa działanie wszystkich kart pogody (Mrożący mróz, Nieprzenikniona mgła i Ulewny deszcz). "
 	},
 	frost: {
-		name: "Biting Frost",
-		description: "Sets the strength of all Close Combat cards to 1 for both players. "
+		name: "Mrożący mróz",
+		description: "Ustawia siłę wszystkich kart walki wręcz na 1 dla obu graczy. "
 	},
 	fog: {
-		name: "Impenetrable Fog",
-		description: "Sets the strength of all Ranged Combat cards to 1 for both players. "
+		name: "Nieprzenikniona mgła",
+		description: "Ustawia siłę wszystkich kart walki dystansowej na 1 dla obu graczy. "
 	},
 	rain: {
-		name: "Torrential Rain",
-		description: "Sets the strength of all Siege Combat cards to 1 for both players. "
+		name: "Ulewny deszcz",
+		description: "Ustawia siłę wszystkich kart oblężniczych na 1 dla obu graczy. "
 	},
 	storm: {
-		name: "Skellige Storm",
-		description: "Reduces the Strength of all Range and Siege Units to 1. "
+		name: "Sztorm Skellige",
+		description: "Zmniejsza siłę wszystkich jednostek dystansowych i oblężniczych do 1. "
 	},
 	hero: {
-		name: "Hero",
-		description: "Not affected by any Special Cards or abilities. "
+		name: "Bohater",
+		description: "Nie podlega działaniu kart specjalnych ani zdolności. "
 	},
 	decoy: {
-		name: "Decoy",
-		description: "Swap with a card on the battlefield to return it to your hand. "
+		name: "Sobowtór",
+		description: "Zamienia się z kartą na polu bitwy, zwracając ją do twojej ręki. "
 	},
 	horn: {
-		name: "Commander's Horn",
-		description: "Doubles the strength of all unit cards in that row. Limited to 1 per row. ",
+		name: "Róg dowódcy",
+		description: "Podwaja siłę wszystkich kart jednostek w tym rzędzie. Maksymalnie 1 na rząd. ",
 		placed: async card => await card.animate("horn")
 	},
 	mardroeme: {
 		name: "Mardroeme",
-		description: "Triggers transformation of all Berserker cards on the same row. ",
+		description: "Wywołuje przemianę wszystkich kart berserkera w tym samym rzędzie. ",
 		placed: async (card, row) => {
 			if (card.isLocked()) return;
 			let berserkers = row.findCards(c => c.abilities.includes("berserker"));
@@ -45,7 +45,7 @@ var ability_dict = {
 	},
 	berserker: {
 		name: "Berserker",
-		description: "Transforms into a bear when a Mardroeme card is on its row. ",
+		description: "Przemienia się w niedźwiedzia, gdy w jego rzędzie znajduje się karta Mardroeme. ",
 		placed: async (card, row) => {
 			if (row.effects.mardroeme === 0 || card.isLocked()) return;
 			row.removeCard(card);
@@ -53,8 +53,8 @@ var ability_dict = {
 		}
 	},
 	scorch: {
-		name: "Scorch",
-		description: "Discard after playing. Kills the strongest card(s) on the battlefield. ",
+		name: "Spopielenie",
+		description: "Odrzuć po zagraniu. Niszczy najsilniejsze karty na polu bitwy. ",
 		activated: async card => {	
 			await ability_dict["scorch"].placed(card);
 			await board.toGrave(card, card.holder.hand);
@@ -72,27 +72,27 @@ var ability_dict = {
 		}
 	},
 	scorch_c: {
-		name: "Scorch - Close Combat",
-		description: "Destroy your enemy's strongest Close Combat unit(s) if the combined strength of all his or her Close Combat units is 10 or more. ",
+		name: "Spopielenie - walka wręcz",
+		description: "Niszczy najsilniejsze jednostki walki wręcz przeciwnika, jeśli łączna siła jego jednostek walki wręcz wynosi co najmniej 10. ",
 		placed: async (card) => await board.getRow(card, "close", card.holder.opponent()).scorch()
 	},
 	scorch_r: {
-		name: "Scorch - Ranged",
-		description: "Destroy your enemy's strongest Ranged Combat unit(s) if the combined strength of all his or her Ranged Combat units is 10 or more. ",
+		name: "Spopielenie - dystans",
+		description: "Niszczy najsilniejsze jednostki dystansowe przeciwnika, jeśli łączna siła jego jednostek dystansowych wynosi co najmniej 10. ",
 		placed: async (card) => await board.getRow(card, "ranged", card.holder.opponent()).scorch()
 	},
 	scorch_s: {
-		name: "Scorch - Siege",
-		description: "Destroys your enemy's strongest Siege Combat unit(s) if the combined strength of all his or her Siege Combat units is 10 or more. ",
+		name: "Spopielenie - oblężenie",
+		description: "Niszczy najsilniejsze jednostki oblężnicze przeciwnika, jeśli łączna siła jego jednostek oblężniczych wynosi co najmniej 10. ",
 		placed: async (card) => await board.getRow(card, "siege", card.holder.opponent()).scorch()
 	},
 	agile: {
-		name:"Agile", 
-		description: "Can be placed in either the Close Combat or the Ranged Combat row. Cannot be moved once placed. "
+		name:"Zwinna",
+		description: "Może zostać umieszczona w rzędzie walki wręcz albo dystansowym. Po umieszczeniu nie można jej przenieść. "
 	},
 	muster: {
-		name:"Muster", 
-		description: "Find any cards with the same name in your deck and play them instantly. ",
+		name:"Zew bojowy",
+		description: "Znajduje w twojej talii wszystkie karty o tej samej nazwie i natychmiast je zagrywa. ",
 		placed: async (card) => {
 			if (card.isLocked()) return;
 			let pred = c => c.target === card.target;
@@ -105,8 +105,8 @@ var ability_dict = {
 		}
 	},
 	spy: {
-		name: "Spy",
-		description: "Place on your opponent's battlefield (counts towards your opponent's total) and draw 2 cards from your deck. ",
+		name: "Szpieg",
+		description: "Umieść na polu bitwy przeciwnika (liczy się do jego wyniku) i dobierz 2 karty z talii. ",
 		placed: async (card) => {
 			if (card.isLocked()) return;
 			await card.animate("spy");
@@ -117,8 +117,8 @@ var ability_dict = {
 		}
 	},
 	medic: {
-		name: "Medic",
-		description: "Choose one card from your discard pile and play it instantly (no Heroes or Special Cards). ",
+		name: "Medyk",
+		description: "Wybierz jedną kartę ze swojego stosu kart odrzuconych i natychmiast ją zagraj (bez bohaterów i kart specjalnych). ",
 		placed: async (card) => {
 			if (card.isLocked() || (card.holder.grave.findCards(c => c.isUnit()) <= 0)) return;
 			let grave = board.getRow(card, "grave", card.holder);
@@ -157,13 +157,13 @@ var ability_dict = {
 		}
 	},
 	morale: {
-		name: "Morale Boost",
-		description: "Adds +1 to all units in the row (excluding itself). ",
+		name: "Premia do morale",
+		description: "Dodaje +1 do siły wszystkich jednostek w rzędzie (z wyjątkiem tej karty). ",
 		placed: async card => await card.animate("morale")
 	},
 	bond: {
-		name: "Tight Bond",
-		description: "Place next to a card with the same name to double the strength of both cards. ",
+		name: "Więź",
+		description: "Umieść obok karty o tej samej nazwie, aby podwoić siłę obu kart. ",
 		placed: async card => {
 			if (card.isLocked()) return;
 			let bonds = card.currentLocation.findCards(c => c.target === card.target).filter(c => c.abilities.includes("bond")).filter(c => !c.isLocked());

@@ -39,7 +39,7 @@ class ControllerAI {
 			}
 		}
 		if (player.leaderAvailable) weights.push({
-			name: "Leader Ability",
+			name: "Zdolność przywódcy",
 			weight: this.weightLeader(player.leader, data_max, data_board),
 			action: async () => {
 				await ui.notification("op-leader", 1200);
@@ -49,7 +49,7 @@ class ControllerAI {
 		if (player.factionAbilityUses > 0) {
 			let factionAbility = factions[player.deck.faction];
 			weights.push({
-				name: "Faction ability",
+				name: "Zdolność frakcji",
 				weight: factionAbility.weight(player),
 				action: async () => {
 					await player.useFactionAbility();
@@ -57,7 +57,7 @@ class ControllerAI {
 			});
 		}
 		weights.push({
-			name: "Pass",
+			name: "Pas",
 			weight: this.weightPass(),
 			action: async () => await player.passRound()
 		});
@@ -744,7 +744,7 @@ class Player {
 		this.reset();
 		this.name = name;
 		document.getElementById("name-" + this.tag).innerHTML = name;
-		var nomeDeck = deck.title ? deck.title : factions[deck.faction].name;
+			var nomeDeck = deck.title ? polishDeckTitle(deck.title) : factions[deck.faction].name;
 		if (nomeDeck.indexOf(" - ") > -1) nomeDeck = nomeDeck.replace(" - ", ":<br /><i>") + "</i>";
 		document.getElementById("deck-name-" + this.tag).innerHTML = nomeDeck;
 		document.getElementById("stats-" + this.tag).getElementsByClassName("profile-img")[0].children[0].children[0];
@@ -2052,6 +2052,7 @@ class Card {
 		if (card_data.id) this.id = Number(card_data.id);
 		this.key = key;
 		this.name = card_data.name;
+		this.displayName = polishCardName(this.name);
 		this.basePower = this.power = Number(card_data.strength);
 		this.faction = card_data.deck;
 		if (this.faction.startsWith("weather") || this.faction.startsWith("special")) this.faction = this.faction.split(" ")[0];
@@ -2068,7 +2069,7 @@ class Card {
 		this.currentLocation = board;
 		if ("target" in card_data) this.target = card_data.target;
 		this.quote = "";
-		if ("quote" in card_data) this.quote = card_data.quote;
+		if ("quote" in card_data) this.quote = polishCardQuote(card_data.quote);
 		this.hero = false;
 		if (this.abilities.length > 0) {
 			if (this.abilities[0] === "hero") {
@@ -2082,16 +2083,16 @@ class Card {
 				if ("activated" in ab) this.activated.push(ab.activated);
 			}
 		}
-		if (this.row === "leader") this.desc_name = "Leader Ability";
+		if (this.row === "leader") this.desc_name = "Zdolność przywódcy";
 		else if (this.abilities.length > 0) {
 			this.desc_name = ability_dict[this.abilities[this.abilities.length - 1]].name;
 			if (this.abilities.length > 1) this.desc_name += " / " + ability_dict[this.abilities[this.abilities.length - 2]].name;
-		} else if (this.row === "agile") this.desc_name = "Agile";
-		else if (this.hero) this.desc_name = "Hero";
+		} else if (this.row === "agile") this.desc_name = "Zwinna";
+		else if (this.hero) this.desc_name = "Bohater";
 		else this.desc_name = "";
 		this.desc = this.row === "agile" ? "<p><b>Agile:</b> " + ability_dict["agile"].description + "</p>" : "";
 		for (let i = this.abilities.length - 1; i >= 0; --i) {
-			let abi_name = (ability_dict[this.abilities[i]].name ? ability_dict[this.abilities[i]].name : "Leader Ability");
+			let abi_name = (ability_dict[this.abilities[i]].name ? ability_dict[this.abilities[i]].name : "Zdolność przywódcy");
 			this.desc += "<p><b>" + abi_name + ":</b> " + ability_dict[this.abilities[i]].description + "</p>";
 		}
 		if (this.abilities.includes("avenger") && this.target) {
@@ -2540,33 +2541,33 @@ class UI {
 
 	async notification(name, duration) {
 		var guia1 = {
-			"notif-nilfgaard-wins-draws": "Nilfgaard wins draws",
-			"notif-op-white-flame": "The opponent's leader cancel your opponent's Leader Ability",
-			"notif-op-leader": "Opponent uses leader",
-			"notif-me-first": "You will go first",
-			"notif-op-first": "Your opponent will go first",
-			"notif-me-coin": "You will go first",
-			"notif-op-coin": "Your opponent will go first",
-			"notif-round-start": "Round Start",
-			"notif-me-pass": "Round passed",
-			"notif-op-pass": "Your opponent has passed",
-			"notif-win-round": "You won the round!",
-			"notif-lose-round": "Your opponent won the round",
-			"notif-draw-round": "The round ended in a draw",
-			"notif-me-turn": "Your turn!",
-			"notif-op-turn": "Opponent's turn",
-			"notif-north": "Northern Realms faction ability triggered - North draws an additional card.",
-			"notif-monsters": "Monsters faction ability triggered - one randomly-chosen Monster Unit Card stays on the board",
-			"notif-scoiatael": "Opponent used the Scoia'tael faction perk to go first.",
-			"notif-skellige-op": "Opponent Skellige Ability Triggered!",
-			"notif-skellige-me": "Skellige Ability Triggered!",
-			"notif-witcher_universe": "Witcher Universe used its faction ability and skipped a turn",
-			"notif-toussaint": "Toussaint faction ability triggered - Toussaint draws an additional card.",
-			"notif-toussaint-decoy-cancelled": "Toussaint Leader ability used - Decoy ability cancelled for the rest of the round.",
-			"notif-lyria_rivia": "Lyria & Rivia ability used - Morale Boost effect applied to a row.",
-			"notif-meve_white_queen": "Lyria & Rivia leader allows both players to restore 2 units when using the medic ability.",
-			"notif-north-scorch-cancelled": "Northern Realms Leader ability used - Scorch ability cancelled for the rest of the round.",
-			"notif-zerrikania": "Zerrikania ability used - Unit restored from discard pile.",
+			"notif-nilfgaard-wins-draws": "Nilfgaard wygrywa remisy",
+			"notif-op-white-flame": "Przywódca przeciwnika anuluje jego zdolność przywódcy",
+			"notif-op-leader": "Przeciwnik używa przywódcy",
+			"notif-me-first": "Wykonasz pierwszy ruch",
+			"notif-op-first": "Przeciwnik wykona pierwszy ruch",
+			"notif-me-coin": "Wykonasz pierwszy ruch",
+			"notif-op-coin": "Przeciwnik wykona pierwszy ruch",
+			"notif-round-start": "Początek rundy",
+			"notif-me-pass": "Pasujesz w tej rundzie",
+			"notif-op-pass": "Przeciwnik spasował",
+			"notif-win-round": "Wygrywasz rundę!",
+			"notif-lose-round": "Przeciwnik wygrywa rundę",
+			"notif-draw-round": "Runda zakończyła się remisem",
+			"notif-me-turn": "Twoja tura!",
+			"notif-op-turn": "Tura przeciwnika",
+			"notif-north": "Zdolność Królestw Północy zadziałała - Północ dobiera dodatkową kartę.",
+			"notif-monsters": "Zdolność Potworów zadziałała - losowa karta jednostki Potworów pozostaje na polu bitwy",
+			"notif-scoiatael": "Przeciwnik użył zdolności Scoia'tael, aby wykonać pierwszy ruch.",
+			"notif-skellige-op": "Zdolność Skellige przeciwnika zadziałała!",
+			"notif-skellige-me": "Zdolność Skellige zadziałała!",
+			"notif-witcher_universe": "Uniwersum Wiedźmina użyło zdolności frakcji i pominęło turę",
+			"notif-toussaint": "Zdolność Toussaint zadziałała - Toussaint dobiera dodatkową kartę.",
+			"notif-toussaint-decoy-cancelled": "Użyto zdolności przywódcy Toussaint - zdolność Sobowtóra anulowana do końca rundy.",
+			"notif-lyria_rivia": "Użyto zdolności Lyr i Rivii - zastosowano Premię do morale w rzędzie.",
+			"notif-meve_white_queen": "Przywódczyni Lyr i Rivii pozwala obu graczom przywrócić 2 jednostki za pomocą zdolności Medyka.",
+			"notif-north-scorch-cancelled": "Użyto zdolności przywódcy Królestw Północy - Spopielenie anulowane do końca rundy.",
+			"notif-zerrikania": "Użyto zdolności Zerrikanii - przywrócono jednostkę ze stosu kart odrzuconych.",
 		}
 		var guia2 = {
 			"me-pass" : "pass",
@@ -3004,9 +3005,9 @@ class Popup {
 		main.children[1].innerHTML = description ? description : "";
 		if (!aviso) {
 			main.children[2].children[0].style = "";
-			main.children[2].children[0].innerHTML = (yesName) ? yesName : "Yes";
+			main.children[2].children[0].innerHTML = (yesName) ? yesName : "Tak";
 		} else main.children[2].children[0].style.display = "none";
-		main.children[2].children[1].innerHTML = (noName) ? noName : "No";
+		main.children[2].children[1].innerHTML = (noName) ? noName : "Nie";
 		this.elem.classList.remove("hide");
 		Popup.setCurrent(this);
 		ui.enablePlayer(true);
@@ -3384,7 +3385,7 @@ class DeckMaker {
 				name: card_dict[deck["leader"]]["name"],
 				row: "leader",
 				filename: card_dict[deck["leader"]]["filename"],
-				desc_name: deck["title"],
+					desc_name: polishDeckTitle(deck["title"]),
 				desc: "<p>" +
 						"<b>Faction ability:</b> " +
 						factions[deck["faction"]]["description"] +
@@ -3427,7 +3428,7 @@ class DeckMaker {
 				name: card_dict[deck["leader"]]["name"],
 				row: "leader",
 				filename: card_dict[deck["leader"]]["filename"],
-				desc_name: deck["title"],
+					desc_name: polishDeckTitle(deck["title"]),
 				desc: "<p>" +
 						"<b>Faction ability:</b> " +
 						factions[deck["faction"]]["description"] +
@@ -3695,7 +3696,7 @@ function getPreviewElem(elem, card, nb = 0) {
 	elem.appendChild(cardbg);
 	let card_name = document.createElement("div");
 	card_name.classList.add("card-large-name");
-	card_name.appendChild(document.createTextNode(card.name));
+	card_name.appendChild(document.createTextNode(card.displayName || card.name));
 	elem.appendChild(card_name);
 	if ("quote" in card) {
 		let quote_elem = document.createElement("div");
@@ -3880,7 +3881,7 @@ document.onkeydown = function (e) {
 
 window.onload = function() {
 	dimensionar();
-	playingOnline = window.location.href == "https://randompianist.github.io/gwent-classic-v3.1/";
+	playingOnline = window.location.href == "https://predsu.github.io/gwent-classic-v3.1/";
 	document.getElementById("load_text").style.display = "none";
 	document.getElementById("button_start").style.display = "inline-block";
 	document.getElementById("deck-customization").style.display = "";
